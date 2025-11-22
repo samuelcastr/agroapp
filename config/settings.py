@@ -53,7 +53,7 @@ INSTALLED_APPS = [
 
     # Aquí van tus aplicaciones:
     'cultivos',
-    # 'cosechas',
+    'cosechas',
     # 'perdidas',
     # 'reportes',
 ]

@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils.timezone import now
@@ -13,7 +13,7 @@ class CultivoViewSet(viewsets.ModelViewSet):
     queryset = Cultivo.objects.all()
     serializer_class = CultivoSerializer
     
-    # filtros obligatorios
+    # Filtros obligatorios
     filter_backends = [DjangoFilterBackend]
     filterset_class = CultivoFilter
 
@@ -21,9 +21,15 @@ class CultivoViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'])
     def proyeccion(self, request, pk=None):
         cultivo = self.get_object()
+
         dias_restantes = (cultivo.fecha_cosecha_estimada - now().date()).days
-        
+        dias_totales = (cultivo.fecha_cosecha_estimada - cultivo.fecha_siembra).days
+        dias_transcurridos = (now().date() - cultivo.fecha_siembra).days
+
+        avance = max(0, min(100, int((dias_transcurridos / dias_totales) * 100)))
+
         return Response({
             "cultivo": cultivo.nombre,
-            "dias_para_cosecha": dias_restantes
+            "dias_restantes": dias_restantes,
+            "avance_porcentaje": avance
         })
