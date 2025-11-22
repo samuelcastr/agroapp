@@ -1,176 +1,145 @@
 // ...existing code...
 # 🌱 AgroApp — API Agrícola
 
-Backend desarrollado con Django y Django REST Framework para gestionar cultivos, cosechas, pérdidas agrícolas y generar reportes.
+API backend desarrollada con Django y Django REST Framework para gestionar cultivos, cosechas, pérdidas agrícolas y generar reportes e indicadores.
 
 ---
 
-## 📌 Descripción
-
-AgroApp es una API REST para la gestión operativa de una finca o empresa agrícola. Permite:
-
+## 📌 Resumen
+AgroApp permite:
 - CRUD de cultivos, cosechas y pérdidas.
 - Cálculo de indicadores y reportes por temporada.
-- Documentación automática con Swagger/Redoc.
-- Arquitectura modular y preparada para autenticación y permisos.
+- Documentación automática (Swagger / Redoc).
+- Estructura modular preparada para autenticación y despliegue.
 
 ---
 
 ## 📦 Tecnologías
-
 - Python 3.12+
 - Django 5.x
 - Django REST Framework
 - drf-yasg (Swagger / Redoc)
 - SQLite (por defecto) / PostgreSQL (opcional)
-- virtualenv o venv
+- virtualenv / venv
 
 ---
 
 ## 📁 Estructura del proyecto (resumen)
-
 agroapp/
-├── cultivos/
-│   ├── models.py
-│   ├── serializers.py
-│   ├── views.py
-│   └── urls.py
-├── cosechas/
-│   ├── models.py
-│   ├── serializers.py
-│   ├── views.py
-│   └── urls.py
-├── perdidas/
-│   ├── models.py
-│   ├── serializers.py
-│   ├── views.py
-│   └── urls.py
-├── reportes/
-│   ├── views.py
-│   └── urls.py
-└── config/
-    ├── settings.py
-    └── urls.py
+├── cultivos/ (models, serializers, views, urls)  
+├── cosechas/ (models, serializers, views, urls)  
+├── perdidas/ (models, serializers, views, urls)  
+├── reportes/ (views, urls)  
+└── config/ (settings.py, urls.py)
 
 ---
 
 ## ⚙️ Instalación (Windows)
-
 1. Clonar repositorio
-```bash
+```powershell
 git clone https://github.com/tu_usuario/agroapp.git
 cd agroapp
 ```
-
-2. Crear y activar entorno virtual (Windows)
+2. Crear y activar entorno virtual
 ```powershell
 python -m venv v_agroapp
 v_agroapp\Scripts\activate
 ```
-
 3. Instalar dependencias
-```bash
+```powershell
 pip install -r requirements.txt
 ```
-
 4. Migrar base de datos
-```bash
+```powershell
 python manage.py makemigrations
 python manage.py migrate
 ```
-
 5. Ejecutar servidor
-```bash
+```powershell
 python manage.py runserver
+```
+
+(Para Linux/macOS usar `source v_agroapp/bin/activate`)
+
+---
+
+## 📊 Endpoints principales (prefijo: /api/)
+- Cultivos — /api/cultivos/
+  - GET /api/cultivos/ — listar
+  - POST /api/cultivos/ — crear
+  - GET /api/cultivos/{id}/ — detalle
+  - PUT /api/cultivos/{id}/ — actualizar
+  - DELETE /api/cultivos/{id}/ — eliminar
+
+- Cosechas — /api/cosechas/
+  - GET /api/cosechas/ — listar
+  - POST /api/cosechas/ — crear
+  - GET /api/cosechas/?lote=XYZ — filtrar por lote
+
+- Pérdidas — /api/perdidas/
+  - GET /api/perdidas/ — listar
+  - POST /api/perdidas/ — crear
+  - PUT /api/perdidas/{id}/ — actualizar
+  - DELETE /api/perdidas/{id}/ — eliminar
+
+- Reportes — /api/reportes/
+  - GET /api/reportes/indicadores/?inicio=YYYY-MM-DD&fin=YYYY-MM-DD  
+    Respuesta ejemplo: { "rendimiento_total": 1234.5, "porcentaje_promedio_perdida": 4.2, "rendimiento_neto_estimado": 1180.3 }
+  - GET /api/reportes/temporada/?anio=2024&temporada=verano
+
+Ejemplo curl:
+```bash
+curl "http://127.0.0.1:8000/api/reportes/indicadores/?inicio=2024-01-01&fin=2024-12-31"
 ```
 
 ---
 
-## 📊 Endpoints principales (base: /api/)
-
-- Cultivos — /api/cultivos/
-  - GET /api/cultivos/ — Listar cultivos
-  - POST /api/cultivos/ — Crear cultivo
-  - PUT /api/cultivos/{id}/ — Actualizar cultivo
-  - DELETE /api/cultivos/{id}/ — Eliminar cultivo
-
-- Cosechas — /api/cosechas/
-  - GET /api/cosechas/ — Listar cosechas
-  - POST /api/cosechas/ — Registrar cosecha
-  - GET /api/cosechas/?lote=XYZ — Filtrar por lote
-
-- Pérdidas — /api/perdidas/
-  - GET /api/perdidas/ — Listar pérdidas
-  - POST /api/perdidas/ — Registrar pérdida
-  - PUT /api/perdidas/{id}/ — Actualizar pérdida
-  - DELETE /api/perdidas/{id}/ — Eliminar pérdida
-
-- Reportes — /api/reportes/
-  - GET /api/reportes/indicadores/?inicio=YYYY-MM-DD&fin=YYYY-MM-DD
-    - Retorna: rendimiento_total, porcentaje_promedio_perdida, rendimiento_neto_estimado (y otros indicadores según implementación).
-  - GET /api/reportes/temporada/?anio=2024&temporada=verano
-    - Retorna métricas agrupadas por temporada.
-
----
-
-## 📈 Temporadas (definición por meses)
-
-- primavera: septiembre — noviembre (9–11)
-- verano: diciembre — febrero (12–2)
-- otoño: marzo — mayo (3–5)
+## 📈 Definición de temporadas (configurable)
+- primavera: septiembre — noviembre (9–11)  
+- verano: diciembre — febrero (12–2)  
+- otoño: marzo — mayo (3–5)  
 - invierno: junio — agosto (6–8)
 
-(Adaptar a la región si es necesario.)
+(Ajustar según región si es necesario.)
 
 ---
 
-## 🔍 Documentación de la API
-
-- Swagger UI: /swagger/
-- Redoc: /redoc/
-- JSON Schema (OpenAPI): /swagger.json
+## 🔍 Documentación automática
+- Swagger UI: /swagger/  
+- Redoc: /redoc/  
+- OpenAPI JSON: /swagger.json
 
 ---
 
-## 🔒 Seguridad (configurable)
-
-La API está preparada para integrar:
-- Autenticación con Token
-- JWT (djangorestframework-simplejwt)
-- CORS (django-cors-headers)
-- Permisos por rol (IsAuthenticated, custom permissions)
-
-(En desarrollo por defecto pueden estar desactivados.)
+## 🔒 Seguridad y configuración recomendada
+- Variables sensibles en .env (SECRET_KEY, DATABASE_URL).
+- Opcionales: Token Auth, JWT (simplejwt), CORS (django-cors-headers), permisos por rol.
+- Configurar logging y settings por entornos (development/production).
 
 ---
 
 ## 🧪 Pruebas
-
-- Se recomienda usar Django TestCase y las utilidades de rest_framework.test.APIClient.
-- Se puede generar una colección Postman (postman_collection.json) para pruebas manuales — disponible bajo petición.
+- Usar Django TestCase y rest_framework.test.APIClient.
+- Puedo generar una colección Postman (postman_collection.json) si la deseas.
 
 ---
 
-## 🧾 Recomendaciones adicionales
-
-- Añadir un archivo .env y usar django-environ para configurar SECRET_KEY, DATABASE_URL y opciones de despliegue.
-- Configurar logging y manejo de errores para producción.
-- Crear documentación de despliegue (Docker / Gunicorn / Nginx) si se va a desplegar en servidor.
+## 🧾 Contribución
+- Abrir issues para bugs o mejoras.
+- Crear pull requests desde ramas con pruebas y descripción clara.
 
 ---
 
 ## 🧑‍💻 Autor y licencia
-
-- Autor: Alicia — AgroApp Developer
+- Autor: Alicia — AgroApp Developer  
 - Licencia: MIT
 
 ---
 
-¿Deseas que genere alguno de los siguientes elementos?
-- ✅ Colección Postman (postman_collection.json)
-- ✅ requirements.txt completo
-- ✅ Diagrama UML básico
-- ✅ README en PDF
-- ✅ Banner/logo para el repositorio
-
-Indica qué prefieres y lo genero.
+¿Deseas que genere alguno de estos archivos adicionales?
+- Colección Postman (postman_collection.json)  
+- requirements.txt completo  
+- Diagrama UML básico  
+- README en PDF  
+- Banner/logo del repositorio
+// ...existing code...
