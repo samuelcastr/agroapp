@@ -54,8 +54,8 @@ INSTALLED_APPS = [
     # Aquí van tus aplicaciones:
     'cultivos',
     'cosechas',
-    # 'perdidas',
-    # 'reportes',
+    'perdidas',
+    'reportes',
 ]
 
 MIDDLEWARE = [
